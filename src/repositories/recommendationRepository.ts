@@ -39,5 +39,31 @@ async function changeScore(id:number, amount:number) {
         WHERE score < -5`);
   return;
 }
-
-export { create, getId, changeScore };
+async function getRandomRecommendation(p: number) {
+  const recommendations = await connection.query("SELECT * FROM recommendations");
+  if (recommendations.rowCount === 0){
+    return false
+  }
+  else {
+    if (p < 0.7) {
+      const recommendation = await connection.query(`
+          SELECT *
+          FROM recommendations
+          WHERE score > 10
+          ORDER BY RANDOM()
+          LIMIT 1`);
+      return recommendation.rows[0];
+    }
+    else {
+      
+      const recommendation = await connection.query(`
+          SELECT *
+          FROM recommendations
+          WHERE score <= 10
+          ORDER BY RANDOM()
+          LIMIT 1`);
+      return recommendation.rows[0];
+    }
+  }
+}
+export { create, getId, changeScore, getRandomRecommendation };

@@ -1,6 +1,7 @@
 import {validateRecommendation} from '../services/recommendationService';
-import {create, getId, changeScore} from '../repositories/recommendationRepository';
+import {create, getId, changeScore, getRandomRecommendation} from '../repositories/recommendationRepository';
 import { Request, Response } from "express";
+import { random } from 'faker';
 
 async function post(req: Request, res: Response) {
     const {name, youtubeLink} = req.body;
@@ -47,4 +48,17 @@ async function downvote(req: Request, res: Response) {
         }
     }
 }
-export { post, upvote, downvote};
+
+async function getRandom(req: Request, res: Response) {
+    let p = Math.random();
+    let randomRecommendation = await getRandomRecommendation(p);
+    if (!randomRecommendation){
+        res.status(404).send({message: 'no recommendation found'});
+        
+    }
+    else {
+        res.status(200).send(randomRecommendation);
+    }
+}
+
+export { post, upvote, downvote, getRandom};
