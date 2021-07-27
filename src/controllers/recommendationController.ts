@@ -30,4 +30,21 @@ async function upvote(req: Request, res: Response) {
         }
     }
 }
-export { post, upvote};
+
+async function downvote(req: Request, res: Response) {
+    const { id } = req.params;
+    if (!id){
+        throw new Error('Id is required');
+    }
+    else {
+        const isValidId = getId(parseInt(id));
+        if (!isValidId){
+            throw new Error('Id is invalid');
+        }
+        else {
+            await changeScore(parseInt(id),-1)
+            res.status(200).send({message: 'recommendation downvoted'});
+        }
+    }
+}
+export { post, upvote, downvote};

@@ -27,6 +27,16 @@ describe("post /recommendations/:id/upvote", () => {
   });
 });
 
+describe("post /recommendations/:id/downvote", () => {
+  it("returns 200 for valid recommendation id", async () => {
+    const id = await createRecommendation();
+    const result = await agent.post(`/recommendations/${id}/downvote`)
+    const status = result.status;
+    expect(status).toEqual(200);
+  });
+});
+
+
 afterAll(() => {
   connection.end();
 });
