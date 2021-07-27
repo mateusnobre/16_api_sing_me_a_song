@@ -9,7 +9,6 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/test", (req, res) => {
-  console.log(process.env.DATABASE_USER);
   res.send("OK!");
 });
 

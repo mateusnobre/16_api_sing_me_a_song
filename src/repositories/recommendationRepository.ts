@@ -1,17 +1,19 @@
 import connection from "../database";
 
 async function create(name: string, youtubeLink: string) {
-  const result = await connection.query(
-    `
-    INSERT INTO sessions
-    (token, "userId")
+  await connection.query(
+    `INSERT INTO recommendations 
+    (name, "youtubeLink")
     VALUES ($1, $2)
-    RETURNING *
-  `,
+    `,
     [name, youtubeLink]
   );
-
-  return false;
+  const recommendation = await connection.query(`
+        SELECT *
+        FROM recommendations
+        ORDER BY id DESC
+        LIMIT 1`)
+  return recommendation.rows[0];
 }
 
 export { create };

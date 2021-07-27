@@ -2,7 +2,6 @@ import connection from "../src/database";
 import app from "../src/app";
 import supertest from "supertest";
 import { createRecommendationBody } from './factories/recommendationFactory'
-import { post } from'../src/controllers/recommendationController'
 
 beforeEach(async () => {
   await connection.query("DELETE FROM recommendations");
@@ -15,7 +14,7 @@ describe("post /recommendations", () => {
     const body = await createRecommendationBody();
     const result = await agent.post("/recommendations").send(body);
     const status = result.status;
-    expect(status).toEqual(200);
+    expect(status).toEqual(201);
   });
 });
 
