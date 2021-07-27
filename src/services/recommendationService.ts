@@ -15,4 +15,4 @@ async function validateRecommendation(name: string, youtubeLink: string){
     }
 }
 
-export { validateRecommendation }
+export { validateRecommendation}

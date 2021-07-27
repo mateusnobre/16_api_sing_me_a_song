@@ -1,5 +1,5 @@
 import {validateRecommendation} from '../services/recommendationService';
-import {create} from '../repositories/recommendationRepository';
+import {create, getId, changeScore} from '../repositories/recommendationRepository';
 import { Request, Response } from "express";
 
 async function post(req: Request, res: Response) {
@@ -14,4 +14,20 @@ async function post(req: Request, res: Response) {
     }
 }
 
-export { post };
+async function upvote(req: Request, res: Response) {
+    const { id } = req.params;
+    if (!id){
+        throw new Error('Id is required');
+    }
+    else {
+        const isValidId = getId(parseInt(id));
+        if (!isValidId){
+            throw new Error('Id is invalid');
+        }
+        else {
+            await changeScore(parseInt(id),1)
+            res.status(200).send({message: 'recommendation upvoted'});
+        }
+    }
+}
+export { post, upvote};

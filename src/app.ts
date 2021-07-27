@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { post }  from './controllers/recommendationController'
+import { post, upvote }  from './controllers/recommendationController'
 
 require('dotenv').config()
 
@@ -13,5 +13,6 @@ app.get("/test", (req, res) => {
 });
 
 app.post("/recommendations", post);
+app.post("/recommendations/:id/upvote", upvote);
 
 export default app;
