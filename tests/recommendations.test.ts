@@ -16,6 +16,30 @@ describe("post /recommendations", () => {
     const status = result.status;
     expect(status).toEqual(201);
   });
+  it("returns 400 for empty params", async () => {
+    const body = {name: '',
+                  youtubeLink: ''
+    };
+    const result = await agent.post("/recommendations").send(body);
+    const status = result.status;
+    expect(status).toEqual(400);
+  });
+  it("returns 400 for non string name", async () => {
+    const body = {name: 2,
+                  youtubeLink: 'https://www.youtube.com/watch?v=pwxzc6w8tdc'
+    };
+    const result = await agent.post("/recommendations").send(body);
+    const status = result.status;
+    expect(status).toEqual(400);
+  });
+  it("returns 400 for non youtube link", async () => {
+    const body = {name: 'name_test',
+                  youtubeLink: 'https://www.google.com/watch?v=pwxzc6w8tdc'
+    };
+    const result = await agent.post("/recommendations").send(body);
+    const status = result.status;
+    expect(status).toEqual(400);
+  });
 });
 
 describe("post /recommendations/:id/upvote", () => {
