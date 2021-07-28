@@ -57,7 +57,12 @@ describe("post /recommendations/:id/upvote", () => {
 describe("post /recommendations/:id/downvote", () => {
   it("returns 200 for valid recommendation id", async () => {
     const id = await createRecommendation();
+    const initialScore = await getScore(id);
     const result = await agent.post(`/recommendations/${id}/downvote`)
+    if (initialScore <= -5){
+      const finalScore = await getScore(id);
+      expect(finalScore).toEqual(initialScore-1);
+    }
     const status = result.status;
     expect(status).toEqual(200);
   });
