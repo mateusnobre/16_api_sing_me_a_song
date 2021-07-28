@@ -1,8 +1,6 @@
 import {validateRecommendation} from '../services/recommendationService';
 import {create, getId, changeScore, getRandomRecommendation, getTopRecommendations} from '../repositories/recommendationRepository';
 import { Request, Response } from "express";
-import { random } from 'faker';
-import { copyFileSync } from 'fs';
 
 async function post(req: Request, res: Response) {
     const {name, youtubeLink} = req.body;
@@ -70,7 +68,6 @@ async function getTop(req: Request, res: Response) {
         
     }
     else {
-        console.log(topRecommendations)
         res.status(200).send(topRecommendations);
     }
 }

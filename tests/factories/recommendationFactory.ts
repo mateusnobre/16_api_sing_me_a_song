@@ -36,3 +36,13 @@ export async function create10Recommendations() {
   }
   return;
 }
+
+export async function getScore(id:number) {
+  const recommendation = await connection.query(
+    `SELECT score 
+    FROM recommendations 
+    WHERE id = $1`,
+    [id]
+  );
+  return recommendation.rows[0].score;
+}

@@ -1,7 +1,7 @@
 import connection from "../src/database";
 import app from "../src/app";
 import supertest from "supertest";
-import { createRecommendation, createRecommendationBody, create10Recommendations } from './factories/recommendationFactory'
+import { createRecommendation, createRecommendationBody, create10Recommendations, getScore } from './factories/recommendationFactory'
 
 beforeEach(async () => {
   await connection.query("DELETE FROM recommendations");
@@ -45,9 +45,12 @@ describe("post /recommendations", () => {
 describe("post /recommendations/:id/upvote", () => {
   it("returns 200 for valid recommendation id", async () => {
     const id = await createRecommendation();
+    const initialScore = await getScore(id);
     const result = await agent.post(`/recommendations/${id}/upvote`)
     const status = result.status;
+    const finalScore = await getScore(id);
     expect(status).toEqual(200);
+    expect(finalScore).toEqual(initialScore+1);
   });
 });
 
