@@ -29,10 +29,10 @@ export async function createRecommendationBody () {
 
 export async function create10Recommendations() {
   for(let i = 0; i < 7; i++){
-    createRecommendation()
+    await createRecommendation()
   }
   for(let i = 0; i < 3; i++){
-    createRecommendation(-4);
+    await createRecommendation(-4);
   }
   return;
 }

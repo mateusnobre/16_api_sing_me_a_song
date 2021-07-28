@@ -36,7 +36,7 @@ describe("post /recommendations/:id/downvote", () => {
   });
 });
 
-describe("get /recommendations/:random", () => {
+describe("get /recommendations/random", () => {
   it("returns 200 if we have recommendations", async () => {
     await create10Recommendations();
     const result = await agent.get(`/recommendations/random`)
@@ -49,6 +49,25 @@ describe("get /recommendations/:random", () => {
     expect(status).toEqual(404);
   });
 });
+
+describe("get recommendations/top/:amount", () => {
+  it("returns 200 if we have recommendations", async () => {
+    await create10Recommendations();
+    let amount = Math.floor(Math.random() * 10) + 1;
+    const result = await agent.get(`/recommendations/top/${amount}`)
+    const status = result.status;
+    expect(status).toEqual(200);
+    expect(result.body.length).toEqual(amount);
+  });
+  it("returns 404 if we don't have recommendations", async () => {
+    let amount = Math.floor(Math.random() * 10) + 1;
+    const result = await agent.get(`/recommendations/top/${amount}`)
+    const status = result.status;
+    expect(status).toEqual(404);
+  });
+});
+
+
 
 
 afterAll(() => {

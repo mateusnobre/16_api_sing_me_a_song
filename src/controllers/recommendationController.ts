@@ -1,7 +1,8 @@
 import {validateRecommendation} from '../services/recommendationService';
-import {create, getId, changeScore, getRandomRecommendation} from '../repositories/recommendationRepository';
+import {create, getId, changeScore, getRandomRecommendation, getTopRecommendations} from '../repositories/recommendationRepository';
 import { Request, Response } from "express";
 import { random } from 'faker';
+import { copyFileSync } from 'fs';
 
 async function post(req: Request, res: Response) {
     const {name, youtubeLink} = req.body;
@@ -52,7 +53,7 @@ async function downvote(req: Request, res: Response) {
 async function getRandom(req: Request, res: Response) {
     let p = Math.random();
     let randomRecommendation = await getRandomRecommendation(p);
-    if (!randomRecommendation){
+    if (randomRecommendation == false){
         res.status(404).send({message: 'no recommendation found'});
         
     }
@@ -61,4 +62,17 @@ async function getRandom(req: Request, res: Response) {
     }
 }
 
-export { post, upvote, downvote, getRandom};
+async function getTop(req: Request, res: Response) {
+    const { amount } = req.params;
+    let topRecommendations = await getTopRecommendations(parseInt(amount));
+    if (topRecommendations.length === 0){
+        res.status(404).send({message: 'no recommendation found'});
+        
+    }
+    else {
+        console.log(topRecommendations)
+        res.status(200).send(topRecommendations);
+    }
+}
+
+export { post, upvote, downvote, getRandom, getTop};

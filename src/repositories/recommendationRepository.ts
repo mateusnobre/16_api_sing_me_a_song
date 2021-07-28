@@ -1,3 +1,4 @@
+import { CONNREFUSED } from "dns";
 import connection from "../database";
 
 async function create(name: string, youtubeLink: string) {
@@ -42,7 +43,7 @@ async function changeScore(id:number, amount:number) {
 async function getRandomRecommendation(p: number) {
   const recommendations = await connection.query("SELECT * FROM recommendations");
   if (recommendations.rowCount === 0){
-    return false
+    return false;
   }
   else {
     if (p < 0.7) {
@@ -66,4 +67,17 @@ async function getRandomRecommendation(p: number) {
     }
   }
 }
-export { create, getId, changeScore, getRandomRecommendation };
+
+async function getTopRecommendations(amount: number) {
+  
+    const topRecommendations = await connection.query(`
+          SELECT *
+          FROM recommendations
+          ORDER BY score DESC
+          LIMIT $1
+    `, [amount])
+    return topRecommendations.rows;
+}
+
+
+export { create, getId, changeScore, getRandomRecommendation, getTopRecommendations };
