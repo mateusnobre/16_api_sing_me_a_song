@@ -1,15 +1,15 @@
 import faker from "faker";
 import connection from "../../src/database";
 
-export async function createRecommendation () {
+export async function createRecommendation (score = 11) {
   const body = await createRecommendationBody();
 
   await connection.query(
     `INSERT INTO recommendations 
-    (name, "youtubeLink")
-    VALUES ($1, $2)
+    (name, "youtubeLink", score)
+    VALUES ($1, $2, $3)
     `,
-    [body.name, body.youtubeLink]
+    [body.name, body.youtubeLink, score]
   );
   const id = await connection.query(`
         SELECT id
@@ -26,3 +26,13 @@ export async function createRecommendationBody () {
   };
   return body;
 } 
+
+export async function create10Recommendations() {
+  for(let i = 0; i < 7; i++){
+    await createRecommendation()
+  }
+  for(let i = 0; i < 3; i++){
+    await createRecommendation(-4);
+  }
+  return;
+}

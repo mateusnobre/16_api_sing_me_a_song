@@ -1,7 +1,7 @@
 import connection from "../src/database";
 import app from "../src/app";
 import supertest from "supertest";
-import { createRecommendation, createRecommendationBody } from './factories/recommendationFactory'
+import { createRecommendation, createRecommendationBody, create10Recommendations } from './factories/recommendationFactory'
 
 beforeEach(async () => {
   await connection.query("DELETE FROM recommendations");
@@ -35,6 +35,39 @@ describe("post /recommendations/:id/downvote", () => {
     expect(status).toEqual(200);
   });
 });
+
+describe("get /recommendations/random", () => {
+  it("returns 200 if we have recommendations", async () => {
+    await create10Recommendations();
+    const result = await agent.get(`/recommendations/random`)
+    const status = result.status;
+    expect(status).toEqual(200);
+  });
+  it("returns 404 if we don't have recommendations", async () => {
+    const result = await agent.get(`/recommendations/random`)
+    const status = result.status;
+    expect(status).toEqual(404);
+  });
+});
+
+describe("get recommendations/top/:amount", () => {
+  it("returns 200 if we have recommendations", async () => {
+    await create10Recommendations();
+    let amount = Math.floor(Math.random() * 10) + 1;
+    const result = await agent.get(`/recommendations/top/${amount}`)
+    const status = result.status;
+    expect(status).toEqual(200);
+    expect(result.body.length).toEqual(amount);
+  });
+  it("returns 404 if we don't have recommendations", async () => {
+    let amount = Math.floor(Math.random() * 10) + 1;
+    const result = await agent.get(`/recommendations/top/${amount}`)
+    const status = result.status;
+    expect(status).toEqual(404);
+  });
+});
+
+
 
 
 afterAll(() => {
